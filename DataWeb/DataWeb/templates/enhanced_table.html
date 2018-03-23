@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">
+    <div class="span12">
+		<div class="jumbotron">
+		       <p>Enhanced table display functionality.</p>
+		       <p>Allows for export/download in various formats</p>
+    	</div>
+<table data-toggle="table"
+	   data-locale="en-GB"
+ 	   data-search="true"
+ 	   data-show-export="true"
+       data-show-refresh="true"
+       data-show-toggle="true"
+       data-pagination="true"
+       data-show-columns="true"
+       data-url="{{ url_for('static', filename='json/employees.json') }}">
+    <thead>
+        <tr>
+			       <th data-field="emp_no">Employee number</th>
+			       <th data-field="birth_date">Date of birth</th>
+			       <th data-field="first_name">First name</th>
+			       <th data-field="last_name">Last name</th>
+			       <th data-field="gender">Gender</th>
+			       <th data-field="hire_date">Date of hire</th>
+			       <th data-field="salary">Current Salary ($)</th>
+        </tr>
+    </thead>
+</table>
+  				{{ content }}
+    </div>
+</div>
+<script>
+    var $table = $('#table');
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                exportDataType: $(this).val()
+            });
+        });
+    })
+</script>
+
+{% endblock %}

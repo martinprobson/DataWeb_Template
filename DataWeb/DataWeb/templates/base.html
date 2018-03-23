@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- MPR 12/02/2017 - Following lines a workaround to allow nav item highlighting -->
+    {% if nav_id %}
+    <meta id="nav_id" data-name="{{ nav_id }}">
+    {% else %}
+    <meta id="nav_id" data-name="{{ request.path }}">
+    {%endif %}
+
+    <meta id="test" data-name=" {{ request.path }}">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Sample Dashboard</title>
+    {% endif %}
+
+    <!-- Bootstrap -->
+<!--  	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">  -->
+	{% if g.bootstrap_theme %}
+		{% set theme_href = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/" + g.bootstrap_theme + "/bootstrap.min.css" %}
+	{% else %}
+		{% set theme_href = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" %}
+	{% endif %}
+
+	 <link href="{{ theme_href}}" rel="stylesheet">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+	<!-- CSS for animated spinner loading page -->
+	<link href="{{ url_for('static', filename='css/spinner.css') }}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/export/bootstrap-table-export.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='libs/FileSaver/FileSaver.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='libs/js-xlsx/xlsx.core.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='libs/tableExport.min.js') }}"></script>
+
+
+	<!-- Latest compiled and minified Locales -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- MPR 12/02/2017 - Following script a workaround to allow nav item highlighting -->
+    <script src="{{ url_for('static', filename='js/nav-item-highlight.js') }}"></script>
+{% block header %}{% endblock %}
+  </head>
+  <body>
+{% macro render_bootstrap_field(field) %}
+
+<div class="form-group {% if field.errors %} error {% endif %}">
+    <label class="col-lg-2 control-label">{{ field.label }}</label>
+
+    <div class="col-lg-8">
+        {{ field(class='form-control')|safe }}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <span class="help-inline">[{{ error }}]</span><br>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+    <!-- Fixed navbar -->
+    <nav class="navbar  navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">{{ config['APP_NAME'] }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li name=Home><a href="/">Home</a></li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sample Pages<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">Sample Pages</li>
+                <li><a href="{{ url_for('show_pygal_chart') }}">Sample Chart (pygal)</a></li>
+                <li><a href="{{ url_for('show_bokeh_chart') }}">Sample Chart (bokeh)</a></li>
+                <li><a href="{{ url_for('show_markdown') }}">Sample Markdown text</a></li>
+                <li><a href="{{ url_for('enhanced_table') }}">Enhanced Table Output</a></li>
+                <li><a href="{{ url_for('wait') }}">Wait Example</a></li>
+                <li role="separator" class="divider"></li>
+              </ul>
+            </li>
+          </ul>
+	      <ul class="nav navbar-nav navbar-right">
+            {% if call_or_get(current_user.is_authenticated) %}
+    	        <li name=/user/profile>  <a href="{{ url_for('user.profile') }}"><span class="glyphicon glyphicon-user"></span>{{ current_user.username }}</a></li>
+    	        <li name=/user/sign-out> <a href="{{ url_for('user.logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            {% else %}
+	            <li name=/user/register> <a href="{{ url_for('user.register') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+    	        <li name=/user/sign-in>  <a href="{{ url_for('user.login')    }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    {% block body %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<!--     <div class="jumbotron"> -->
+<!--       <h1>Theme example</h1> -->
+<!--       <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p> -->
+<!--     </div> --> -->
+    
+<!--     {% block menu %} -->
+<!--     <div id="menu-div" class="with-margins"> -->
+<!--         <a href="/">Home</a> -->
+<!--         {% if call_or_get(current_user.is_authenticated) %} -->
+<!--             &nbsp; | &nbsp; <a href="{{ url_for('user.profile') }}">User profile</a> -->
+<!--         {% endif %} -->
+<!--     </div> -->
+    {% endblock %}
+    <hr class="no-margins"/>
+
+    <div id="main-div" class="with-margins">
+    {# One-time system messages called Flash messages #}
+    {% block flash_messages %}
+        {%- with messages = get_flashed_messages(with_categories=true) -%}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category=='error' %}
+                        {% set category='danger' %}
+                    {% endif %}
+                    <div class="alert alert-{{category}}">{{ message|safe }}</div>
+                {% endfor %}
+            {% endif %}
+        {%- endwith %}
+    {% endblock %}
+
+    </div>
+    {% block main %}{% block content %}{% endblock %}{% endblock %}
+
+    <br/>
+    <hr class="no-margins"/>
+    <div id="footer-div" class="clearfix with-margins">
+        <div class="pull-left">{{ config['APP_NAME'] }} {{ config['APP_VERSION'] }}</div>
+        <div class="pull-right">{{ config['APP_TEAM'] }}</div>
+    </div>
+    {% endblock %}
+
+  </body>
+</html>

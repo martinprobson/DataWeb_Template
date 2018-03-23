@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="no-margins">
+  <form action="" method="post" name="theme">
+      {{ form.hidden_tag() }}
+      {{ render_bootstrap_field(form.theme) }}
+      <input class="btn btn-primary" type="submit" value="Change">
+  </form>  		
+ </div>
+{% endblock %}
+
+
+
+
+

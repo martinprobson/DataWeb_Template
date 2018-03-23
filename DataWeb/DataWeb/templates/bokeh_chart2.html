@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">
+    <div class="span12">
+
+	<div class="jumbotron">
+		<p>This is a sample chart using Python's bokeh library.</p><p>The bokeh plot is stored statically in this case for demo purposes, but in a real application
+		a bokeh server would be used to serve the content.
+    </div>
+
+	<div id="loader" class="loader"></div>
+<!--	<iframe src="{{ url_for('static', filename='html/test2.html') }}" height="800" width="1000" onload="document.getElementById('loader').style.display='none';"></iframe> -->
+
+        {{ bokeh_css }}
+        {{ bokeh_js }}
+
+        {{ plot_div|indent(8) }}
+        {{ plot_script|indent(8) }}
+    </div>
+</div>
+
+
+{% endblock %}
+

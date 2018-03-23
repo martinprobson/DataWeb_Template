@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block header  %}
+<meta id="render-page" data-page="{{pagename}}">
+<script>
+	$(function () {
+		var v = $('#render-page').data();
+		console.log(v.page);
+	})
+</script>
+ <script>
+ 	$(function () { 
+ 		var render_page = $('#render-page').data();
+		$("#content").load(render_page.page); 
+        		  });
+</script>
+
+{% endblock %}
+{% block content %}
+ 
+<div class="container">     
+    <div class="span12">
+    
+	    <div id="content">
+    		<div class="loader"></div>
+    	</div> 
+
+			
+    </div> 
+</div>  	    
+  	    
+  	    
+{% endblock %}

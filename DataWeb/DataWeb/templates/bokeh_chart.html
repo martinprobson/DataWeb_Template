@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">
+    <div class="span12">
+
+	<div class="jumbotron">
+		<p>This is a sample chart using Python's bokeh library.</p><p>The bokeh plot is generated in the view in this case for demo purposes, but in a real application
+		a bokeh server could be used to serve the content.
+    </div>
+
+    {{ div|safe }}
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.js"></script>
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.js"></script>
+    {{ script|safe }}
+    </div>
+</div>
+{% endblock %}
+
+
+

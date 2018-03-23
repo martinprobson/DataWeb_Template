@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container">
+	<h2>Current Issues/Measures</h2>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Issue Id</th>
+				<th>Description</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+			{% for issue in issues %}
+			    {% if issue.status == 'Closed' %}
+			    	<tr class="success">
+			    {% else %}
+				    {% if issue.status == 'Open' %}
+				    	<tr class="warning">
+				    {% else %}
+				    	{% if issue.status == 'Active' %}
+				    		<tr class="danger">
+				    	{% else %}
+				    		<tr class="info">
+				    	{% endif %}
+			    	{% endif %}
+			    {%endif %}
+					<td><a href="{{ url_for( 'blank_page' ) }}">{{ issue.id }}</a></td>
+					<td>{{ issue.description }}</td>
+					<td>{{ issue.status }}</td>
+				</tr>
+			{% endfor %}
+	</table>
+</div>
+
+{% endblock %}
+
+

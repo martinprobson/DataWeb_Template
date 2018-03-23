@@ -1,0 +1,11 @@
+/DataWeb/DataWeb.egg-info/*
+.pydevproject
+.project
+.ipynb_checkpoints/
+db_repository/
+*.SVG
+*.svg
+*.pyc
+*.log
+*.db
+*.gif

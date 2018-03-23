@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">     
+    <div class="span12">
+    
+	<div class="jumbotron"> 
+	       <p>This is a sample chart using Python's pygal library.</p> 
+	       <p>Unlike bokeh, pygal can only serve static charts, but might be ok for basic visualizations. 
+	       Pygal theme can be changed via the dropdown</p> 
+    </div> 
+
+
+	  	<form action="" method="post" name="style">
+		      {{ form.hidden_tag() }}
+		      {{ render_bootstrap_field(form.style) }}
+     		 	<input class="btn btn-primary" type="submit" value="Change">
+  	    </form> 
+  	    <br> 		
+  	    
+			<embed type="image/svg+xml" src={{chart|safe}} style='max-width:1500px'/>
+    </div> 
+</div>  	    
+  	    
+  	    
+{% endblock %}
